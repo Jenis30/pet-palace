@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farmacia</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="shortcut icon" href="../img/bone.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="app">
+      {{calcularTotal}} {{guardarDatosCarrito}} {{guardarDatosCarritoID}}
+      <header>
+        <header>
+          <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="../"
+                ><img
+                  src="../img/petshop_logo.png"
+                  alt="petshop_logo"
+                  id="logo"
+              /></a>
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
+                      href="../index.html"
+                      >Inicio</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Farmacia</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="./jugueteria.html">Jugueteria</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="contacto.html">Contacto</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+      </header>
+      <main class="min-vh-50">
+        <div class="carrito">
+          <button
+            class="btn btn-primary colorBtn"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasExample"
+            aria-controls="offcanvasExample"
+          >
+            <i class="bi bi-cart-dash"></i>
+          </button>
+        </div>
+        <div
+          class="offcanvas offcanvas-start canvas--mod"
+          tabindex="-1"
+          id="offcanvasExample"
+          aria-labelledby="offcanvasExampleLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Carrito</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <!-- Contenido -->
+            <section class="h-100 h-custom">
+              <div class="container h-100 py-5">
+                <div
+                  class="row d-flex justify-content-center align-items-start h-100"
+                >
+                  <div class="col">
+                    <div
+                      v-if="productosCarrito.length > 0"
+                      class="table-responsive"
+                    >
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col" class="h5">Producto</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col" class="text-center">Cantidad</th>
+                            <th scope="col">Precio</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="producto of productosCarrito">
+                            <th scope="row">
+                              <div class="d-flex align-items-center">
+                                <img
+                                  :src="producto.imagen"
+                                  class="img-fluid rounded-3"
+                                  style="width: 120px"
+                                  alt="Book"
+                                />
+                                <div class="flex-column ms-4">
+                                  <p class="mb-2">{{producto.producto}}</p>
+                                </div>
+                              </div>
+                            </th>
+                            <td class="align-middle">
+                              <p class="mb-0" style="font-weight: 500">
+                                {{producto.categoria}}
+                              </p>
+                            </td>
+                            <td class="align-middle">
+                              <div class="d-flex flex-row">
+                                <button
+                                  class="btn btn-link px-2"
+                                  @click="restarCompra(producto)"
+                                >
+                                  <i class="bi bi-dash-circle"></i>
+                                </button>
+
+                                <input
+                                  readonly
+                                  id="form1"
+                                  name="quantity"
+                                  :value="producto.catidadAComprar"
+                                  type="number"
+                                  class="form-control form-control-sm"
+                                  style="width: 50px"
+                                />
+
+                                <button
+                                  class="btn btn-link px-2"
+                                  @click="sumarCompra(producto)"
+                                >
+                                  <i
+                                    v-if="producto.catidadAComprar < producto.disponibles"
+                                    class="bi bi-plus-circle"
+                                  ></i>
+                                  <i
+                                    v-else
+                                    class="bi bi-plus-circle text-danger"
+                                  ></i>
+                                </button>
+                              </div>
+                            </td>
+                            <td class="align-middle">
+                              <p class="mb-0" style="font-weight: 500">
+                                ${{producto.precioCantidad}}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Total: {{totalPrecioCarrito}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <h4 v-else class="text-center">
+                      No hay productos en el carrito
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        <div class="backgroundImage">
+          <section
+            class="tituloFarmacia justify-content-center align-items-center"
+          >
+            <div
+              class="d-flex flex-column align-items-center pt-5 breakpointTitulo"
+            >
+              <h1><span>Farmacia</span></h1>
+              <p class="fs-3">
+                ¿Tu mascota no se siente bien? aquí encontraras la solución
+              </p>
+            </div>
+          </section>
+
+          <div class="m-4">
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="col-4">
+                <div class="dropdown">
+                  <button
+                    class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    $Min - $Max
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li @change="filtroCruzado" class="dropdown-item">
+                      <input
+                        type="radio"
+                        class="btn-check w-100"
+                        name="options-base"
+                        id="todos"
+                        value="Todos"
+                        autocomplete="off"
+                        v-model="valorSeleccionado"
+                      />
+                      <label class="btn" for="todos">Todos los precios</label>
+                    </li>
+                    <li @change="filtroCruzado" class="dropdown-item">
+                      <input
+                        type="radio"
+                        class="btn-check w-100"
+                        name="options-base"
+                        id="hasta500"
+                        value="2000"
+                        autocomplete="off"
+                        v-model="valorSeleccionado"
+                      />
+                      <label class="btn" for="hasta500">Hasta $2000</label>
+                    </li>
+                    <li @change="filtroCruzado" class="dropdown-item">
+                      <input
+                        type="radio"
+                        class="btn-check w-100"
+                        name="options-base"
+                        id="hasta1500"
+                        value="2500"
+                        autocomplete="off"
+                        v-model="valorSeleccionado"
+                      />
+                      <label class="btn" for="hasta1500">Hasta $2500</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <input
+                  placeholder="Buscar . . . "
+                  class="form-control inputSm"
+                  type="text"
+                  aria-label="readonly input example"
+                  v-model="valorInput"
+                  @input="filtroCruzado"
+                />
+              </div>
+            </div>
+            <section class="d-flex flex-wrap gap-5 justify-content-center">
+              <div
+                class="d-flex flex-wrap gap-5 justify-content-center cardsContainer cartas align-items-center"
+                v-cloak
+              >
+                <div
+                  v-for="producto of productosFarmaciaFiltrados"
+                  class="card cardHeight"
+                  style="width: 18rem"
+                >
+                  <div class="alturaUnidadesLimite"></div>
+                  <div class="m-1 p-1 alturaUnidadesLimite">
+                    <span
+                      v-if=" producto.disponibles >= 2 && producto.disponibles <= 5"
+                      class="badge unidades"
+                      >Últimas {{producto.disponibles}} unidades</span
+                    >
+                    <span
+                      v-else-if=" producto.disponibles === 1"
+                      class="badge text-bg-danger"
+                      >Última unidad</span
+                    >
+                    <span
+                      v-else-if=" producto.disponibles === 0"
+                      class="badge text-bg-danger"
+                      >Agotados</span
+                    >
+                  </div>
+                  <img
+                    :src="producto.imagen"
+                    class="card-img-top imgHeight p-3"
+                    :alt="producto.producto"
+                  />
+                  <div
+                    class="card-body d-flex flex-column justify-content-center align-items-center"
+                  >
+                    <div class="alturaTexto">
+                      <h5 class="card-title cardFont">{{producto.producto}}</h5>
+                    </div>
+                    <p class="fs-4">${{producto.precio}}</p>
+                    <div class="d-flex aling-items-center">
+                      <button
+                        v-if="!productoCarritoID.includes(producto._id)"
+                        @click="agregarCarrito(producto)"
+                        class="btn--mod hoverBtn"
+                      >
+                        Agregar a carrito
+                      </button>
+                      <button
+                        v-else
+                        class="btn--mod hoverBtn"
+                        @click="removerCarrito(producto)"
+                      >
+                        Quitar del carrito
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <h3 v-if="productosFarmaciaFiltrados.length === 0">
+                  No hay productos
+                </h3>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <footer
+        id="footer"
+        class="d-flex justify-content-between align-items-center p-3"
+      >
+        <div class="d-flex gap-3 imgfooter">
+          <img
+            class="footerpics"
+            src="../img/facebook.png"
+            alt="Facebook picture"
+          />
+          <img
+            class="footerpics"
+            src="../img/instagram.png"
+            alt="Instagram picture"
+          />
+          <img
+            class="footerpics"
+            src="../img/whatsapp.png"
+            alt="Whatsapp picture"
+          />
+        </div>
+      </footer>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="../js/farmacia.js"></script>
+  </body>
+</html>
